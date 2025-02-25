@@ -69,7 +69,7 @@ function sidebar(): DefaultTheme.SidebarItem[] {
             text: linuxIcon + '操作系统',
             collapsed: true,
             items: [
-                { text: '入门须知', link: '/前言/入门须知', },
+                { text: '高频考点', link: '/src/base408/os/knowledge' },
             ]
         },
         {
