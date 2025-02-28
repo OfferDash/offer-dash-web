@@ -46,7 +46,7 @@
 **** 
 
 <div align="center">
-    <image src="/images/os/process.png" width="700"/>
+    <image src="/images/os/knowledge/process.png" width="700"/>
 </div>
 
 操作系统的进程有三种状态：

@@ -15,7 +15,7 @@
   - 它分为四个层次：网络接口层、网际层、传输层、应用层。
 
 <div align="center">
-    <image src="/images/net/osi.png" width="700"/>
+    <image src="/images/net/knowledge/osi.png" width="700"/>
     <p>图参考自《深入浅出计算机网络》</p>
 </div>
 
@@ -84,7 +84,7 @@ Token：
 ****
 
 <div align="center">
-    <image src="/images/net/tcp.png" width="700"/>
+    <image src="/images/net/knowledge/tcp.png" width="700"/>
     <p>图参考自《深入浅出计算机网络》</p>
 </div>
 
@@ -96,7 +96,7 @@ TCP 建立连接三次握手：
 三次握手的主要目的是同步连接双方的序列号和确认双方的接收能力，确保连接的可靠性。
 
 <div align="center">
-    <image src="/images/net/out.png" width="700"/>
+    <image src="/images/net/knowledge/out.png" width="700"/>
     <p>图参考自《深入浅出计算机网络》</p>
 </div>
 
