@@ -76,34 +76,7 @@ function sidebar(): DefaultTheme.SidebarItem[] {
             text: javaIcon + 'Java基础',
             collapsed: true,
             items: [
-                {
-                    text: '语言基础',
-                    collapsed: true,
-                    items: [
-                        { text: 'C语言基础', link: '/学科课程/语言基础/C语言基础' },
-                        { text: 'C++语法基础', link: '/学科课程/语言基础/C++语法基础' },
-                        { text: 'Java语法基础', link: '/学科课程/语言基础/Java语法基础' },
-                        { text: 'Python语法基础', link: '/学科课程/语言基础/Python语法基础' },
-                    ]
-                },
-                {
-                    text: '计算机基础',
-                    collapsed: true,
-                    items: [
-                        { text: '数据结构', link: '/学科课程/计算机基础/数据结构' },
-                        { text: '计算机组成原理', link: '/学科课程/计算机基础/计算机组成原理' },
-                        { text: '计算机网络', link: '/学科课程/计算机基础/计算机网络' },
-                        { text: '操作系统', link: '/学科课程/计算机基础/操作系统' },
-                    ]
-                },
-                {
-                    text: '专业课程',
-                    collapsed: true,
-                    items: [
-                        { text: '数据库原理', link: '/学科课程/专业课程/数据库原理' },
-                        { text: '编译原理', link: '/学科课程/专业课程/编译原理' },
-                    ]
-                },
+                { text: '高频考点', link: '/src/java/knowledge' },
             ]
         },
         {
