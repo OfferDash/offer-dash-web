@@ -83,9 +83,7 @@ function sidebar(): DefaultTheme.SidebarItem[] {
             text: acm + '算法基础',
             collapsed: true,
             items: [
-                { text: '竞赛介绍', link: '/竞赛经验/竞赛介绍', },
-                { text: '算法竞赛学习指南', link: '/竞赛经验/算法竞赛学习指南', },
-                { text: 'CTF竞赛学习指南', link: '/竞赛经验/CTF竞赛学习指南', },
+                { text: '二分算法', link: '/src/algorithm/binarySearch' },
             ]
         },
         {
