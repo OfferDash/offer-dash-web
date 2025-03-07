@@ -97,9 +97,7 @@ function sidebar(): DefaultTheme.SidebarItem[] {
             text: mysqlIcon + 'MySQL',
             collapsed: true,
             items: [
-                { text: '竞赛介绍', link: '/竞赛经验/竞赛介绍', },
-                { text: '算法竞赛学习指南', link: '/竞赛经验/算法竞赛学习指南', },
-                { text: 'CTF竞赛学习指南', link: '/竞赛经验/CTF竞赛学习指南', },
+                { text: '高频考点', link: '/src/mysql/knowledge', }
             ]
         },
         {
