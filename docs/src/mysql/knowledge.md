@@ -142,7 +142,7 @@ MySQL 索引对比：
 
 ****
 
-### 可重复读是否解决了幻读 ?
+### 可重复读是否解决了幻读
 
 ****
 
@@ -162,3 +162,58 @@ MySQL 索引对比：
   - 通过next-key lock(记录锁+间隙锁)方式解决了幻读
   - 因为当执行select for update语句的时候，会加上next-key lock
   - 如果有其他事务在next-key lock锁范围内插入了一条记录，那么这个插入语句就会被阻塞，无法成功插入
+
+## SQL 优化
+
+****
+
+### 定位慢查询
+
+****
+
+| **定位方式**         | **MySQL 自带慢查询日志** | **Arthas** |
+|-------------------|----------------------|------------|
+| **数据来源**       | MySQL Server 记录的慢查询日志 | JVM 运行时方法调用跟踪，可定位到代码层 |
+| **使用方式** | 需修改MySQL配置（如 `slow_query_log`） | 无需修改应用代码，动态attach到JVM |
+| **性能开销**   | 开启慢查询日志对MySQL有一定I/O开销 | 轻量级，对应用性能影响较小 |
+| **监控方式** | `mysqldumpslow` 或 `pt-query-digest` 分析日志 | 支持实时动态监控方法调用，定位到具体方法 |
+
+**MySQL慢查询日志**：
+- 配置文件：/etc/my.cnf
+- 查询是否生效： `SHOW VARIABLES LIKE '%slow_query%'`，`SHOW VARIABLES LIKE '%long_query_time%'`
+- 开启慢日志：slow_query_log = 1 或 `SET GLOBAL slow_query_log = 'ON'`
+- 设置超时记录时间：long_query_time = x 或 `SET GLOBAL long_query_time = x`，x 为秒，超过 x 秒记录该 sql
+- 日志保存位置：/var/lib/mysql/localhost-slow.log 或 `SET GLOBAL slow_query_log_file = '/var/log/mysql/mysql-slow.log'`
+
+**Arthas监控**
+
+- 监控方法调用耗时：`trace com.example.mapper.UserMapper selectById`
+- 监控JDBC查询：`trace *JDBC4Connection* query`
+- 监控Druid连接池：`watch com.alibaba.druid.pool.DruidPooledConnection * '{params, throwExp}' -x 3`
+
+****
+
+### 分析慢查询
+
+****
+
+直接在 SELECT 语句之前加上关键字 EXPLAIN / DESC:
+```sql
+EXPLAIN SELECT 字段列表 FROM 表名 WHERE 条件 ;
+```
+
+| **字段/概念** | **优化建议** |
+|-----------|---------------|
+| **id** | 查询执行顺序标识。相同id按顺序执行，不同id从大到小执行（子查询可能导致不同id） |
+| **select_type** | <ul><li>`SIMPLE`：简单单表查询</li><li>`PRIMARY`：外层主查询</li><li>`UNION`：UNION中第二个及以后的查询</li><li>`SUBQUERY`：SELECT/WHERE中的子查询</li></ul> |
+| **type（性能排序）** | <ul><li>`NULL`：未访问表（最佳）</li><li>`system` > `const` > `eq_ref` > `ref` > `range` > `index` > `all`（最差）</li><li>**优化重点**：至少达到`range`级别，避免`all`全表扫描</li></ul> |
+| **possible_keys** | 可能使用的索引（检查是否包含预期索引，若无则需创建） |
+| **key** | 实际使用的索引（若为NULL说明未走索引，需优化） |
+| **key_len** | 索引使用的字节数（相同查询条件下，值越小效率通常越高） |
+| **Extra** | <ul><li>`Using where; Using Index`：**覆盖索引**，无需回表（最优）</li><li>`Using index condition`：使用索引但需回表</li><li>`Using filesort`或`Using temporary`：需优化（出现临时表或文件排序）</li></ul> |
+
+**常见索引优化**：
+- 索引是否命中：`possible_keys`不为空但`key`为 `NULL`，需强制索引或优化SQL
+- 索引是否失效：`type`为`all`或`index` 说明索引失效
+- 是否使用覆盖索引：`Extra`出现`Using index` 说明走了二级索引
+- 索引长度优化：对比`key_len`与字段实际长度，过大会影响内存使用
